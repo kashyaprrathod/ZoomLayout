@@ -19,6 +19,7 @@ import com.otaliastudios.zoom.internal.movement.PanManager
 import com.otaliastudios.zoom.internal.movement.ZoomManager
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.roundToInt
 
 
 /**
@@ -332,7 +333,81 @@ constructor(context: Context) : ZoomApi {
             val scaleX = mMatrixValues[Matrix.MSCALE_X]
             val scaleY = mMatrixValues[Matrix.MSCALE_Y]
             val scale = (scaleX + scaleY) / 2f // These should always be equal.
-            onUpdate(engine, panX, panY, scale)
+
+            val newVW = engine.contentWidth * scale;
+            val newVH = engine.contentHeight * scale;
+//            val croppingW : Int;
+//            val croppingH : Int;
+//
+//            val finalVideo_W : Int;
+//            val finalVideo_H : Int;
+            val isOriginalVideoVertical : Boolean;
+
+            val newVideoCoordinates : IntArray = intArrayOf(0,0)
+            val newCroppingCoordinates : IntArray = intArrayOf(0,0)
+            val finalVideoCoordinates : IntArray = intArrayOf(0,0)
+
+            newVideoCoordinates[0] = (engine.contentWidth * scale).roundToInt()
+            newVideoCoordinates[1] = (engine.contentHeight * scale).roundToInt()
+
+
+            if(engine.contentWidth > engine.contentHeight){
+
+                isOriginalVideoVertical = false;
+
+                if(panY > 0){
+
+                    newCroppingCoordinates[0] = engine.containerWidth.roundToInt()
+                    newCroppingCoordinates[1] = newVH.roundToInt()
+
+
+                    finalVideoCoordinates[0] = engine.containerWidth.roundToInt();
+                    finalVideoCoordinates[1] = (engine.containerHeight.roundToInt() - (2 * Math.round(panY)))
+
+
+                }else{
+
+
+                    newCroppingCoordinates[0] = engine.containerWidth.roundToInt()
+                    newCroppingCoordinates[1] = engine.containerHeight.roundToInt()
+
+
+                    finalVideoCoordinates[0] = engine.containerWidth.roundToInt()
+                    finalVideoCoordinates[1] = (engine.containerHeight.roundToInt() - (2 * Math.round(panY)))
+
+
+                }
+
+            }else{
+
+                isOriginalVideoVertical = true;
+
+                if(panX > 0){
+
+
+                    newCroppingCoordinates[0] = newVW.roundToInt()
+                    newCroppingCoordinates[1] = newVH.roundToInt() - Math.round(panY)
+
+
+                    finalVideoCoordinates[0] = (engine.containerWidth.roundToInt() - (2 * Math.round(panX)))
+                    finalVideoCoordinates[1] = engine.containerHeight.roundToInt();
+
+
+                }else{
+
+
+                    newCroppingCoordinates[0] = engine.containerWidth.roundToInt()
+                    newCroppingCoordinates[1] = engine.containerHeight.roundToInt()
+
+
+                    finalVideoCoordinates[0] = engine.containerWidth.roundToInt()
+                    finalVideoCoordinates[1] = engine.containerHeight.roundToInt();
+
+                }
+
+            }
+
+            onUpdate(engine, panX, panY, scale,isOriginalVideoVertical,newVideoCoordinates,newCroppingCoordinates,finalVideoCoordinates)
         }
 
         /**
@@ -342,8 +417,13 @@ constructor(context: Context) : ZoomApi {
          * @param panX the new horizontal pan value
          * @param panY the new vertical pan value
          * @param zoom the new scale value
+         * @param isVideoVertical true if video is vertical
+         * @param newVideoCoordinates width and height of video after zoom applied
+         * @param newCroppingCoordinates width and height of cropped video
+         * @param finalVideoCoordinatesWithContainer width and height of final container after applied zooming
          */
-        internal abstract fun onUpdate(engine: ZoomEngine, panX: Float, panY: Float, zoom: Float)
+        internal abstract fun onUpdate(engine: ZoomEngine, panX: Float, panY: Float, zoom: Float
+                                       ,isVideoVertical : Boolean,newVideoCoordinates : IntArray,newCroppingCoordinates : IntArray,finalVideoCoordinatesWithContainer : IntArray)
     }
 
     /**

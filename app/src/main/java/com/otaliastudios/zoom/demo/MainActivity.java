@@ -20,6 +20,7 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.google.android.exoplayer2.video.VideoListener;
+import com.otaliastudios.zoom.ZoomEngine;
 import com.otaliastudios.zoom.ZoomImageView;
 import com.otaliastudios.zoom.ZoomLayout;
 import com.otaliastudios.zoom.ZoomLogger;
@@ -129,6 +130,18 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onZoomSurfaceDestroyed(@NotNull ZoomSurfaceView view) { }
+        });
+
+        surface.getEngine().addListener(new ZoomEngine.SimpleListener() {
+            @Override
+            public void onUpdate$zoomlayout_debug(@NotNull ZoomEngine engine, float panX, float panY, float zoom, boolean isVideoVertical, @NotNull int[] newVideoCoordinates, @NotNull int[] newCroppingCoordinates, @NotNull int[] finalVideoCoordinatesWithContainer) {
+
+            }
+
+            @Override
+            public void onIdle(@NotNull ZoomEngine engine) {
+
+            }
         });
         controls.setPlayer(player);
         controls.setShowTimeoutMs(0);

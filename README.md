@@ -30,6 +30,9 @@ allprojects {
 ```
 
 dependencies {
+
+		implementation 'com.otaliastudios.opengl:egloo:0.4.0'
+		
 	        implementation 'com.github.kashyaprrathod:ZoomLayout:Tag'
 	}
 

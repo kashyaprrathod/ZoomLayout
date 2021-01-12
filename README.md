@@ -54,6 +54,22 @@ other business-related question.
 
 ## Setup
 
+get Cropping coordinates and scalling coordinates after apply zooming using:-
+
+```
+surface.getEngine().addListener(new ZoomEngine.SimpleListener() {
+            @Override
+            public void onUpdate$zoomlayout_debug(@NotNull ZoomEngine engine, float panX, float panY, float zoom, boolean isVideoVertical, @NotNull int[] newVideoCoordinates, @NotNull int[] newCroppingCoordinates, @NotNull int[] finalVideoCoordinatesWithContainer) {
+
+            }
+
+            @Override
+            public void onIdle(@NotNull ZoomEngine engine) {
+
+            }
+        });
+```
+
 Please read the [official website](https://natario1.github.io/ZoomLayout) for setup instructions and documentation.
 You might also be interested in our [changelog](https://natario1.github.io/ZoomLayout/about/changelog).
 
